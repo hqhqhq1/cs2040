@@ -1,0 +1,73 @@
+import java.util.*;
+
+public class BestRelayTeam {
+
+    public static class runner implements Comparable<runner> {
+        public String name;
+        public double firstTiming;
+        public double secondTiming;
+
+        public runner(String name, double firstTiming, double secondTiming) { //constructor
+            this.name = name;
+            this.firstTiming = firstTiming;
+            this.secondTiming = secondTiming;
+        }
+
+        @Override
+        public int compareTo(runner next) {  // Sort the runner by speed on any of the other legs
+            if (this.secondTiming > next.secondTiming) {
+                return 1;
+            } else if (this.secondTiming < next.secondTiming) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int num = sc.nextInt(); //get number of runner
+
+        runner[] runnerList = new runner[num]; //create the list of runner
+
+        for (int i = 0; i < num ; i++) {
+            String name = sc.next();
+            double timing1 = sc.nextDouble();
+            double timing2 = sc.nextDouble();
+
+            runnerList[i] = new runner(name, timing1, timing2); //input details of runners
+        }
+
+        //Arrays.sort(runnerList);// Sort the list of runner by speed on any of the other legs
+        int teamChosen[] = new int[4]; // Will store the fastest team, integer corresponding to the index
+        double currentFastest = 999999; // store the fastest timing here, set a safe upper bound first,
+
+
+        for (int i = 0; i < num ; i++) {  // create best team for each runner to be the first leg runner.
+            double totalTiming = runnerList[i].firstTiming;  // save first runner timing
+
+            int currentTeam[] = new int[4];
+            currentTeam[0] = i;     // add the first runner
+
+
+            int count = 1;
+            for (int j=0; count < 4; j++) {            // Add the following 3 runner
+
+                if (j != i) {
+                    currentTeam[count] = j;
+                    count++;
+                    totalTiming = totalTiming + runnerList[j].secondTiming;
+                }
+            }
+
+            if (totalTiming < currentFastest) {            // pick the faster team.
+                currentFastest = totalTiming;
+                teamChosen = currentTeam;
+            }
+        }
+        System.out.println(currentFastest);  //printing output
+        for (int i = 0; i < 4; i++)
+            System.out.println(runnerList[teamChosen[i]].name);
+    }
+}
